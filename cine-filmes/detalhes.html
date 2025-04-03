@@ -58,6 +58,11 @@
                 const resposta = await fetch(`http://localhost:8000/api/filmes.php?id=${filmeId}`);
                 const filme = await resposta.json();
 
+                if (!filme || filme.erro) {
+                    document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Filme não encontrado.</p>";
+                    return;
+                }
+
                 document.getElementById("detalhesFilme").innerHTML = `
                     <div class="card">
                         <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
@@ -70,6 +75,7 @@
                         </div>
                     </div>
                 `;
+
             } catch (erro) {
                 console.error("Erro ao carregar detalhes do filme:", erro);
                 document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Erro ao carregar detalhes do filme.</p>";
