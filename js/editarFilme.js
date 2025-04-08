@@ -13,7 +13,7 @@ async function carregarFilme() {
   
   document.querySelector("[name=sinopse]").value = filme.sinopse;
   document.querySelector("[name=capa]").value = filme.capa;
-  document.querySelector("[name=trailer]").value = filme.treiler;
+  document.querySelector("[name=trailer]").value = filme.trailer;
   const campoData = document.querySelector("[name=data_lancamento]");
     if (filme.data_lancamento && campoData) {
     campoData.value = filme.data_lancamento.slice(0, 10);
@@ -50,4 +50,28 @@ document.getElementById("formEditarFilme").addEventListener("submit", async (e) 
   if (!resultado.erro) {
       window.location.href = "index.html";
   }
+
+  document.getElementById("btnExcluir").addEventListener("click", async () => {
+    const confirmar = confirm("Tem certeza que deseja excluir este filme?");
+    if (!confirmar) return;
+  
+    const id = document.getElementById("filmeId").value;
+  
+    try {
+      const resposta = await fetch(`${API_URL}?id=${id}`, {
+        method: "DELETE",
+      });
+  
+      const resultado = await resposta.json();
+      alert(resultado.mensagem || resultado.erro);
+  
+      if (!resultado.erro) {
+        window.location.href = "../index.html";
+      }
+    } catch (erro) {
+      console.error("Erro ao excluir filme:", erro);
+      alert("Erro ao excluir o filme.");
+    }
+  });
+  
 });

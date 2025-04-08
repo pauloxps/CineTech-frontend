@@ -61,6 +61,9 @@
           <input type="number" id="duracao" name="duracao" class="form-control" />
         </div>
         <button type="submit" class="btn btn-primary w-100">Salvar</button>
+        <button type="button" id="btnExcluir" class="btn btn-danger w-100 mt-2">Excluir</button>
+
+
 
         <a href="../index.html" class="btn btn-secondary w-100 mt-2">Voltar</a>
 
@@ -71,31 +74,31 @@
   </div>
 
   <script>
-    const API_URL = "http://localhost:8000/api/filmes.php"; // Atualize para sua API real
-
+    const API_URL = "http://localhost:8000/api/filmes.php";
+  
     async function carregarFilmes() {
       try {
         const resposta = await fetch(API_URL);
         const filmes = await resposta.json();
         const lista = document.getElementById("listaFilmes");
         lista.innerHTML = "";
-
+  
         filmes.forEach(filme => {
           const item = document.createElement("li");
           item.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
-
+  
           item.innerHTML = `
             <span>${filme.titulo}</span>
             <button class="btn btn-sm btn-warning" onclick="editarFilme(${filme.id}, '${filme.titulo}', '${filme.sinopse}', '${filme.genero}', '${filme.capa}', '${filme.trailer}', '${filme.data_lancamento}', '${filme.duracao}')">Editar</button>
           `;
-
+  
           lista.appendChild(item);
         });
       } catch (erro) {
         console.error("Erro ao carregar filmes:", erro);
       }
     }
-
+  
     function editarFilme(id, titulo, sinopse, genero, capa, trailer, data_lancamento, duracao) {
       document.getElementById("filmeId").value = id;
       document.getElementById("titulo").value = titulo;
@@ -106,40 +109,71 @@
       document.getElementById("data_lancamento").value = data_lancamento;
       document.getElementById("duracao").value = duracao;
     }
-
+  
     document.getElementById("formEditarFilme").addEventListener("submit", async function(event) {
-      event.preventDefault();
+  event.preventDefault();
 
-      const id = document.getElementById("filmeId").value;
-      const dadosFilme = {
-        titulo: document.getElementById("titulo").value,
-        sinopse: document.getElementById("sinopse").value,
-        genero: document.getElementById("genero").value,
-        capa: document.getElementById("capa").value,
-        trailer: document.getElementById("trailer").value,
-        data_lancamento: document.getElementById("data_lancamento").value,
-        duracao: document.getElementById("duracao").value
-      };
+  const id = document.getElementById("filmeId").value;
+  const dadosFilme = {
+    titulo: document.getElementById("titulo").value,
+    sinopse: document.getElementById("sinopse").value,
+    genero: document.getElementById("genero").value,
+    capa: document.getElementById("capa").value,
+    trailer: document.getElementById("trailer").value,
+    data_lancamento: document.getElementById("data_lancamento").value,
+    duracao: document.getElementById("duracao").value
+  };
 
-      try {
-        const resposta = await fetch(`${API_URL}?id=${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dadosFilme)
-        });
-
-        if (resposta.ok) {
-          alert("Filme atualizado com sucesso!");
-          carregarFilmes();
-        } else {
-          alert("Erro ao atualizar o filme.");
-        }
-      } catch (erro) {
-        console.error("Erro ao atualizar filme:", erro);
-      }
+  try {
+    const resposta = await fetch(`${API_URL}?id=${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dadosFilme)
     });
 
+    if (resposta.ok) {
+      alert("Filme atualizado com sucesso!");
+      window.location.href = "../index.html";
+    } else {
+      alert("Erro ao atualizar o filme.");
+    }
+  } catch (erro) {
+    console.error("Erro ao atualizar filme:", erro);
+  }
+});
+
+
+  
     carregarFilmes();
+  
+    document.getElementById("btnExcluir").addEventListener("click", async () => {
+      const id = document.getElementById("filmeId").value;
+  
+      if (!id) {
+        alert("Selecione um filme para excluir.");
+        return;
+      }
+  
+      const confirmar = confirm("Tem certeza que deseja excluir este filme?");
+      if (!confirmar) return;
+  
+      try {
+        const resposta = await fetch(`${API_URL}?id=${id}`, {
+          method: "DELETE"
+        });
+  
+        const resultado = await resposta.json();
+        alert(resultado.mensagem || resultado.erro);
+  
+        if (!resultado.erro) {
+          // 🚀 Redireciona para a página correta
+          window.location.href = "../index.html";
+        }
+      } catch (erro) {
+        console.error("Erro ao excluir filme:", erro);
+        alert("Erro ao tentar excluir o filme.");
+      }
+    });
   </script>
 
   <!-- Bootstrap JS -->
