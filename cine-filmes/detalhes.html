@@ -1,89 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Filme</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            max-width: 600px;
-            border-radius: 15px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            background: white;
-            overflow: hidden;
-        }
-        .card-img-top {
-            max-height: 450px;
-            object-fit: cover;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-        .card-body {
-            text-align: center;
-        }
-        .btn-trailer {
-            background: #dc3545;
-            color: white;
-            border-radius: 30px;
-            padding: 10px 20px;
-            transition: 0.3s;
-        }
-        .btn-trailer:hover {
-            background: #bb2d3b;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes do Filme</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <style>
+    body {
+      background: linear-gradient(to right, #f0f2f5, #e0eafc);
+      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .card {
+      max-width: 650px;
+      border-radius: 20px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .card-img-top {
+      max-height: 400px;
+      object-fit: cover;
+    }
+    .card-body {
+      text-align: center;
+      padding: 30px;
+    }
+    .card-body h3 {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .card-body p {
+      font-size: 1rem;
+      color: #555;
+    }
+    .btn-trailer {
+      background: #e50914;
+      color: white;
+      border-radius: 50px;
+      padding: 10px 25px;
+      font-weight: 500;
+      box-shadow: 0px 4px 10px rgba(229, 9, 20, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-trailer:hover {
+      background: #b0060f;
+      transform: scale(1.05);
+    }
+    .btn-voltar {
+      margin-top: 25px;
+      font-weight: 500;
+    }
+    .modal-content {
+      border-radius: 15px;
+      background-color: #000;
+    }
+    .modal-title {
+      color: #fff;
+    }
+    .modal-header {
+      border-bottom: none;
+    }
+    .btn-close {
+      filter: invert(1);
+    }
+  </style>
 </head>
-<body class="d-flex flex-column align-items-center py-4">
-    <div class="container">
-        <h2 class="text-primary text-center mb-4">🎬 Detalhes do Filme 🎬</h2>
-        <div id="detalhesFilme" class="d-flex justify-content-center"></div>
-        <a href="index.html" class="btn btn-secondary mt-4">Voltar</a>
+<body>
+  <div class="container d-flex flex-column align-items-center">
+    <h2 class="text-center text-primary mb-5 display-6">🎬 Detalhes do Filme</h2>
+    <div id="detalhesFilme" class="d-flex justify-content-center w-100"></div>
+    <a href="index.html" class="btn btn-secondary btn-voltar">⬅️ Voltar</a>
+  </div>
+
+  <!-- Modal do Trailer -->
+  <div class="modal fade" id="modalTrailer" tabindex="-1" aria-labelledby="modalTrailerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTrailerLabel">🎥 Trailer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="ratio ratio-16x9">
+            <iframe id="iframeTrailer" src="" title="YouTube video player" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const filmeId = params.get("id");
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const filmeId = params.get("id");
 
-        async function carregarDetalhes() {
-            if (!filmeId) {
-                document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Filme não encontrado.</p>";
-                return;
-            }
+    async function carregarDetalhes() {
+      if (!filmeId) {
+        document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Filme não encontrado.</p>";
+        return;
+      }
 
-            try {
-                const resposta = await fetch(`http://localhost:8000/api/filmes.php?id=${filmeId}`);
-                const filme = await resposta.json();
+      try {
+        const resposta = await fetch(`http://localhost:8000/api/filmes.php?id=${filmeId}`);
+        const filme = await resposta.json();
 
-                if (!filme || filme.erro) {
-                    document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Filme não encontrado.</p>";
-                    return;
-                }
-
-                document.getElementById("detalhesFilme").innerHTML = `
-                    <div class="card">
-                        <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
-                        <div class="card-body">
-                            <h3 class="text-primary">${filme.titulo}</h3>
-                            <p class="text-muted"><strong>Gênero:</strong> ${filme.genero}</p>
-                            <p class="text-muted"><strong>Duração:</strong> ${filme.duracao} min</p>
-                            <p class="text-muted"><strong>Sinopse:</strong> ${filme.sinopse}</p>
-                            <a href="${filme.trailer}" target="_blank" class="btn btn-trailer mt-3">🎥 Assistir Trailer</a>
-                        </div>
-                    </div>
-                `;
-            } catch (erro) {
-                console.error("Erro ao carregar detalhes do filme:", erro);
-                document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Erro ao carregar detalhes do filme.</p>";
-            }
+        if (!filme || filme.erro) {
+          document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Filme não encontrado.</p>";
+          return;
         }
 
-        carregarDetalhes();
-    </script>
+        document.getElementById("detalhesFilme").innerHTML = `
+          <div class="card">
+            <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
+            <div class="card-body">
+              <h3 class="text-primary">${filme.titulo}</h3>
+              <p><strong>🎞️ Gênero:</strong> ${filme.genero}</p>
+              <p><strong>⏱️ Duração:</strong> ${filme.duracao} min</p>
+              <p><strong>📝 Sinopse:</strong> ${filme.sinopse}</p>
+              <button class="btn btn-trailer mt-3" onclick="abrirTrailer('${filme.trailer}')">🎥 Assistir Trailer</button>
+            </div>
+          </div>
+        `;
+      } catch (erro) {
+        console.error("Erro ao carregar detalhes do filme:", erro);
+        document.getElementById("detalhesFilme").innerHTML = "<p class='text-danger text-center'>Erro ao carregar detalhes do filme.</p>";
+      }
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    function abrirTrailer(url) {
+      const videoId = url.split("v=")[1]?.split("&")[0];
+      if (videoId) {
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        document.getElementById("iframeTrailer").src = embedUrl;
+        const modal = new bootstrap.Modal(document.getElementById("modalTrailer"));
+        modal.show();
+      } else {
+        alert("Trailer inválido.");
+      }
+    }
+
+    const modalEl = document.getElementById("modalTrailer");
+    modalEl.addEventListener("hidden.bs.modal", () => {
+      document.getElementById("iframeTrailer").src = "";
+    });
+
+    carregarDetalhes();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

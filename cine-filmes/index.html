@@ -3,75 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CineTech - Lista de Filmes</title>
-  
+  <title>CineTech - Estilo Netflix</title>
+
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  
+
   <style>
-    body { background-color: #f8f9fa; }
-    .container { max-width: 1200px; }
-    .card { border-radius: 15px; }
-    .card img { height: 250px; object-fit: cover; }
+    body {
+      background-color: #141414;
+      color: #fff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .navbar {
+      background-color: #111;
+    }
+
+    .navbar-brand {
+      color: #e50914 !important;
+      font-size: 1.8rem;
+    }
+
+    .nav-link {
+      color: #fff !important;
+    }
+
+    .nav-link:hover {
+      color: #e50914 !important;
+    }
+
+    .container {
+      max-width: 1200px;
+    }
+
+    h2 {
+      color: #e50914;
+    }
+
+    .form-control,
+    .form-select {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    .form-control::placeholder {
+      color: #aaa;
+    }
+
+    .card {
+      background-color: #222;
+      border: none;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .card img {
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .card-title {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .text-muted {
+      color: #aaa !important;
+    }
+
+    .btn-primary {
+      background-color: #e50914;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #f40612;
+    }
   </style>
 </head>
 <body class="d-flex flex-column align-items-center py-4">
   
-  <!-- Navbar Atualizada -->
-  <!-- Navbar Atualizada -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm w-100">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">Minha Loja</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link text-white" href="index.html">Início</a>
-        </li>
-        <li class="nav-item">
-        </li>
-        <!-- Dropdown Admin -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-            Admin
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="admin/cadastrarFilme.html">Cadastrar Filme</a></li>
-            <li><a class="dropdown-item" href="admin/editarFilme.html">Editar Filme</a></li>
-          </ul>
-
-        </li>
-      </ul>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm w-100">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">CineTech</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Início</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-bold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+              Admin
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="admin/cadastrarFilme.html">Cadastrar Filme</a></li>
+              <li><a class="dropdown-item" href="admin/editarFilme.html">Editar Filme</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-
-  <!-- Conteúdo Principal -->
-  <div class="container">
-    <h2 class="text-center text-primary mb-4">Lista de Filmes</h2>
+  <div class="container mt-4">
+    <h2 class="text-center mb-4">Lista de Filmes</h2>
     
-    <!-- Barra de Busca -->
     <div class="mb-3">
       <input type="text" id="searchInput" class="form-control" placeholder="Buscar filme pelo título...">
     </div>
-    <!-- Filtro por Gênero -->
-      <div class="mb-3">
-        <select id="filtroGenero" class="form-select">
-          <option value="">Todos as Categorias</option>
-          <option value="Ação">Ação</option>
-          <option value="Comédia">Comédia</option>
-          <option value="Drama">Drama</option>
-          <option value="Terror">Terror</option>
-          <option value="Ficção">Ficção</option>
-          <!-- Adicione mais conforme os gêneros disponíveis -->
-        </select>
-      </div>
 
-    
+    <div class="mb-3">
+      <select id="filtroGenero" class="form-select">
+        <option value="">Todas as Categorias</option>
+        <option value="Ação">Ação</option>
+        <option value="Comédia">Comédia</option>
+        <option value="Drama">Drama</option>
+        <option value="Terror">Terror</option>
+        <option value="Ficção">Ficção</option>
+      </select>
+    </div>
+
     <!-- Grid de Filmes -->
     <div class="row" id="listaFilmes">
       <!-- Filmes serão inseridos aqui pelo JavaScript -->
@@ -81,78 +144,60 @@
   <!-- JavaScript -->
   <script>
     const API_URL = "http://localhost:8000/api/filmes.php";
-  let todosOsFilmes = []; // Aqui guardamos todos os filmes
+    let todosOsFilmes = [];
 
-  async function listarFilmes() {
-    try {
-      const resposta = await fetch(API_URL);
-      todosOsFilmes = await resposta.json(); // Salvando os filmes
-      exibirFilmes(todosOsFilmes); // Mostra todos por padrão
-    } catch (erro) {
-      console.error("Erro ao listar filmes:", erro);
+    async function listarFilmes() {
+      try {
+        const resposta = await fetch(API_URL);
+        todosOsFilmes = await resposta.json();
+        exibirFilmes(todosOsFilmes);
+      } catch (erro) {
+        console.error("Erro ao listar filmes:", erro);
+      }
     }
-  }
 
-  function exibirFilmes(listaFilmes) {
-    const lista = document.getElementById("listaFilmes");
-    lista.innerHTML = "";
+    function exibirFilmes(listaFilmes) {
+      const lista = document.getElementById("listaFilmes");
+      lista.innerHTML = "";
 
-    listaFilmes.forEach(filme => {
-      const card = document.createElement("div");
-      card.classList.add("col-md-3", "mb-4");
+      listaFilmes.forEach(filme => {
+        const card = document.createElement("div");
+        card.classList.add("col-md-3", "mb-4");
 
-      card.innerHTML = `
-        <div class="card shadow-sm">
-          <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
-          <div class="card-body text-center">
-            <h5 class="card-title">${filme.titulo}</h5>
-            <p class="text-muted">${filme.genero} | ${filme.duracao} min</p>
-            <a href="detalhes.html?id=${filme.id}" class="btn btn-primary">Ver detalhes</a>
+        card.innerHTML = `
+          <div class="card shadow-sm">
+            <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
+            <div class="card-body text-center">
+              <h5 class="card-title">${filme.titulo}</h5>
+              <p class="text-muted">${filme.genero} | ${filme.duracao} min</p>
+              <a href="detalhes.html?id=${filme.id}" class="btn btn-primary">Ver detalhes</a>
+            </div>
           </div>
-        </div>
-      `;
+        `;
 
-      lista.appendChild(card);
-    });
-  }
-
-  // Filtro por título
-  document.getElementById("searchInput").addEventListener("input", aplicarFiltros);
-
-  // Filtro por gênero
-  document.getElementById("filtroGenero").addEventListener("change", aplicarFiltros);
-
-  function aplicarFiltros() {
-    const termo = document.getElementById("searchInput").value.toLowerCase();
-    const generoSelecionado = document.getElementById("filtroGenero").value;
-
-    const filtrados = todosOsFilmes.filter(filme => {
-      const correspondeTitulo = filme.titulo.toLowerCase().includes(termo);
-      const correspondeGenero = generoSelecionado === "" || filme.genero === generoSelecionado;
-      return correspondeTitulo && correspondeGenero;
-    });
-
-    exibirFilmes(filtrados);
-  }
-
-  // Carrega os filmes ao iniciar
-  listarFilmes();
-
-    // Filtrando os filmes pelo título
-    document.getElementById("searchInput").addEventListener("input", function () {
-      const termo = this.value.toLowerCase();
-      const filmes = document.querySelectorAll("#listaFilmes .col-md-3");
-
-      filmes.forEach(card => {
-        const titulo = card.querySelector(".card-title").textContent.toLowerCase();
-        card.style.display = titulo.includes(termo) ? "block" : "none";
+        lista.appendChild(card);
       });
-    });
+    }
 
-    // Carregar os filmes ao abrir a página
+    document.getElementById("searchInput").addEventListener("input", aplicarFiltros);
+    document.getElementById("filtroGenero").addEventListener("change", aplicarFiltros);
+
+    function aplicarFiltros() {
+      const termo = document.getElementById("searchInput").value.toLowerCase();
+      const generoSelecionado = document.getElementById("filtroGenero").value;
+
+      const filtrados = todosOsFilmes.filter(filme => {
+        const correspondeTitulo = filme.titulo.toLowerCase().includes(termo);
+        const correspondeGenero = generoSelecionado === "" || filme.genero === generoSelecionado;
+        return correspondeTitulo && correspondeGenero;
+      });
+
+      exibirFilmes(filtrados);
+    }
+
     listarFilmes();
   </script>
-  
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
