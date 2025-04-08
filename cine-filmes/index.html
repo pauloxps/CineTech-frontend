@@ -58,6 +58,19 @@
     <div class="mb-3">
       <input type="text" id="searchInput" class="form-control" placeholder="Buscar filme pelo título...">
     </div>
+    <!-- Filtro por Gênero -->
+      <div class="mb-3">
+        <select id="filtroGenero" class="form-select">
+          <option value="">Todos as Categorias</option>
+          <option value="Ação">Ação</option>
+          <option value="Comédia">Comédia</option>
+          <option value="Drama">Drama</option>
+          <option value="Terror">Terror</option>
+          <option value="Ficção">Ficção</option>
+          <!-- Adicione mais conforme os gêneros disponíveis -->
+        </select>
+      </div>
+
     
     <!-- Grid de Filmes -->
     <div class="row" id="listaFilmes">
@@ -68,35 +81,62 @@
   <!-- JavaScript -->
   <script>
     const API_URL = "http://localhost:8000/api/filmes.php";
+  let todosOsFilmes = []; // Aqui guardamos todos os filmes
 
-    async function listarFilmes() {
-      try {
-        const resposta = await fetch(API_URL);
-        const filmes = await resposta.json();
-        const lista = document.getElementById("listaFilmes");
-        lista.innerHTML = "";
-
-        filmes.forEach(filme => {
-          const card = document.createElement("div");
-          card.classList.add("col-md-3", "mb-4");
-
-          card.innerHTML = `
-            <div class="card shadow-sm">
-              <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
-              <div class="card-body text-center">
-                <h5 class="card-title">${filme.titulo}</h5>
-                <p class="text-muted">${filme.genero} | ${filme.duracao} min</p>
-                <a href="detalhes.html?id=${filme.id}" class="btn btn-primary">Ver detalhes</a>
-              </div>
-            </div>
-          `;
-
-          lista.appendChild(card);
-        });
-      } catch (erro) {
-        console.error("Erro ao listar filmes:", erro);
-      }
+  async function listarFilmes() {
+    try {
+      const resposta = await fetch(API_URL);
+      todosOsFilmes = await resposta.json(); // Salvando os filmes
+      exibirFilmes(todosOsFilmes); // Mostra todos por padrão
+    } catch (erro) {
+      console.error("Erro ao listar filmes:", erro);
     }
+  }
+
+  function exibirFilmes(listaFilmes) {
+    const lista = document.getElementById("listaFilmes");
+    lista.innerHTML = "";
+
+    listaFilmes.forEach(filme => {
+      const card = document.createElement("div");
+      card.classList.add("col-md-3", "mb-4");
+
+      card.innerHTML = `
+        <div class="card shadow-sm">
+          <img src="${filme.capa}" class="card-img-top" alt="${filme.titulo}">
+          <div class="card-body text-center">
+            <h5 class="card-title">${filme.titulo}</h5>
+            <p class="text-muted">${filme.genero} | ${filme.duracao} min</p>
+            <a href="detalhes.html?id=${filme.id}" class="btn btn-primary">Ver detalhes</a>
+          </div>
+        </div>
+      `;
+
+      lista.appendChild(card);
+    });
+  }
+
+  // Filtro por título
+  document.getElementById("searchInput").addEventListener("input", aplicarFiltros);
+
+  // Filtro por gênero
+  document.getElementById("filtroGenero").addEventListener("change", aplicarFiltros);
+
+  function aplicarFiltros() {
+    const termo = document.getElementById("searchInput").value.toLowerCase();
+    const generoSelecionado = document.getElementById("filtroGenero").value;
+
+    const filtrados = todosOsFilmes.filter(filme => {
+      const correspondeTitulo = filme.titulo.toLowerCase().includes(termo);
+      const correspondeGenero = generoSelecionado === "" || filme.genero === generoSelecionado;
+      return correspondeTitulo && correspondeGenero;
+    });
+
+    exibirFilmes(filtrados);
+  }
+
+  // Carrega os filmes ao iniciar
+  listarFilmes();
 
     // Filtrando os filmes pelo título
     document.getElementById("searchInput").addEventListener("input", function () {
